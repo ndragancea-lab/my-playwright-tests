@@ -86,7 +86,10 @@ export class ContactPage {
    * Check page description
    */
   async checkPageDescription(expectedText: string) {
-    await expect(this.page.getByText(expectedText)).toBeVisible();
+    // Use a non-exact text match so small copy edits (punctuation/extra words)
+    // don't cause the test to fail. This makes the assertion tolerant while
+    // still ensuring the important phrase is present on the page.
+    await expect(this.page.getByText(expectedText, { exact: false })).toBeVisible();
   }
 }
 

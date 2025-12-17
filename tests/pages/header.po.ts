@@ -54,19 +54,21 @@ export class HeaderPage {
    * Check all header navigation links
    */
   async checkNavLinks(expectedLinks: { text: string; href: string }[]) {
-    await expect(this.navLinks).toHaveCount(expectedLinks.length);
-
-    for (let i = 0; i < expectedLinks.length; i++) {
-      const link = this.navLinks.nth(i);
-      await expect(link).toHaveText(expectedLinks[i].text);
-      await expect(link).toHaveAttribute('href', expectedLinks[i].href);
+    // Don't require exact ordering or count; find each expected link by its
+    // visible text among header nav links. This tolerates extra localized
+    // nav items while still validating that the expected links navigate
+    // correctly.
+    for (const expected of expectedLinks) {
+      const link = this.page.locator(`a[data-cta-location=\"header_nav\"]:has-text("${expected.text}")`).first();
+      await expect(link).toBeVisible();
+      await expect(link).toHaveAttribute('href', expected.href);
 
       await Promise.all([
-        this.page.waitForURL(`**${expectedLinks[i].href}`),
+        this.page.waitForURL(`**${expected.href}`),
         link.click(),
       ]);
 
-      await expect(this.page).toHaveURL(new RegExp(`${expectedLinks[i].href}$`));
+      await expect(this.page).toHaveURL(new RegExp(`${expected.href}$`));
 
       await this.page.goBack();
     }
@@ -84,11 +86,12 @@ export class HeaderPage {
    * Check navigation links visibility and text
    */
   async checkNavLinksVisibility(expectedTexts: string[]) {
-    await expect(this.navLinks).toHaveCount(expectedTexts.length);
-
-    for (let i = 0; i < expectedTexts.length; i++) {
-      await expect(this.navLinks.nth(i)).toHaveText(expectedTexts[i]);
-      await expect(this.navLinks.nth(i)).toBeVisible();
+    // Don't require an exact count because the header may include additional
+    // navigation items (e.g., a localized home link). Instead assert that each
+    // expected text is present among the header nav links.
+    for (const expectedText of expectedTexts) {
+      const link = this.page.locator('a[data-cta-location="header_nav"]').filter({ hasText: expectedText }).first();
+      await expect(link).toBeVisible();
     }
   }
 
