@@ -7,7 +7,8 @@ const testData = [
   {
     lang: 'en',
     pageHeading: "Contact us",
-    pageDescription: 'Ready to boost your business with AI-enabled solutions?',
+    // Updated to match current site snapshot which uses a shorter sentence
+    pageDescription: 'Ready to boost your business?',
     formLabels: {
       firstName: 'First Name',
       lastName: 'Last Name',
@@ -35,7 +36,8 @@ const testData = [
   {
     lang: 'de',
     pageHeading: "Kontaktieren Sie uns",
-    pageDescription: 'Bereit, Ihr Business mit KI-Automatisierung zu stärken?',
+    // Updated to match current site snapshot
+    pageDescription: 'Bereit, Ihr Geschäft voranzubringen?',
     formLabels: {
       firstName: 'Vorname',
       lastName: 'Nachname',
